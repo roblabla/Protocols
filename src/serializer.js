@@ -44,9 +44,9 @@ class Parser extends Transform {
         packet = this.parsePacketBuffer(this.queue)
       } catch (e) {
         if (e.partialReadError) { 
-          e.buffer = this.queue
-          return cb(e)
+          return cb()
         } else {
+          e.buffer = this.queue
           this.queue = Buffer.alloc(0)
           return cb(e)
         }
