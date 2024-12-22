@@ -43,8 +43,10 @@ class Parser extends Transform {
       try {
         packet = this.parsePacketBuffer(this.queue)
       } catch (e) {
-        e.buffer = this.queue
-        if (e.partialReadError) { return cb() } else {
+        if (e.partialReadError) { 
+          e.buffer = this.queue
+          return cb(e)
+        } else {
           this.queue = Buffer.alloc(0)
           return cb(e)
         }
@@ -78,14 +80,7 @@ class FullPacketParser extends Transform {
       }
     } catch (e) {
       e.buffer = this.queue
-      if (e.partialReadError) {
-        if (!this.noErrorLogging) {
-          console.log(e.stack)
-        }
-        return cb()
-      } else {
-        return cb(e)
-      }
+      return cb(e)
     }
     this.push(packet)
     cb()
