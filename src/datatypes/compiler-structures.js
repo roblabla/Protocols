@@ -96,6 +96,7 @@ module.exports = {
           for (const { name } of type[1]) {
             const trueName = compiler.getField(name)
             code += `const ${trueName} = value.${name}\n`
+            code += `if (${trueName} === undefined) throw new Error("Missing bitfield field '${trueName}'")\n`
             if (name === trueName) names.push(name)
             else names.push(`${name}: ${trueName}`)
           }
@@ -104,6 +105,7 @@ module.exports = {
           trueName = compiler.getField(name)
           if (_shouldBeInlined) code += `let ${name} = value\n`
           else code += `let ${trueName} = value.${name}\n`
+          code += `if (${trueName} === undefined) throw new Error("Missing field '${trueName}'")\n`
         }
         code += 'offset = ' + compiler.callType(trueName, type) + '\n'
       }
